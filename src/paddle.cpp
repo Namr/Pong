@@ -8,7 +8,7 @@ void Paddle::load(int x)
 	rect.y = 30;
 	rect.h = h;
 	rect.w = w;
-	speed = 0.03f;
+	speed = 0.06f;
 	pos = rect.y;
 }
 

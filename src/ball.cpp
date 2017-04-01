@@ -6,9 +6,9 @@ void Ball::load()
 	rect.h = 25;
 	x = 640 / 2;
 	y = 480 / 2;
-	speed = 0.03f;
+	speed = 0.06f;
 	dir = -1;
-	ySpeed = 0.01f;
+	ySpeed = 0.02f;
 	yDir = -1;
 }
 
@@ -18,7 +18,7 @@ void Ball::reset()
 	y = 480 / 2;
 	speed = 0.03f;
 	dir = -1;
-	ySpeed = 0.01f;
+	ySpeed = 0.02f;
 	yDir = -1;
 }
 void Ball::render(SDL_Renderer* renderer, Paddle &lp, Paddle &rp)
@@ -35,19 +35,15 @@ void Ball::render(SDL_Renderer* renderer, Paddle &lp, Paddle &rp)
 		yDir = yDir * -1;
 		ySpeed = ySpeed * (rp.rect.y / 55);
 	}
-	if (y > 0)
+	if (y < 0)
 	{
-		if (y > 480 - 25)
-		{
-			ySpeed = 0.01f;
-			yDir *= -1;
-		}
+		yDir = yDir * -1;
 	}
-	else
+	else if (y > 480 - 25)
 	{
-		ySpeed = 0.01f;
-		yDir *= -1;
+		yDir = yDir * -1;
 	}
+
 	if(x < 0)
 	{
 		reset();
