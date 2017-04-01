@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <sstream>
 
 #include "paddle.h"
 #include "ball.h"
@@ -21,8 +22,9 @@ int Rdir;
 float Bx = SCREEN_WIDTH / 2;
 float By = SCREEN_HEIGHT / 2;
 
-
-double deltaTime = 0;
+Uint32 startclock = 0;
+Uint32 deltaclock = 0;
+Uint32 currentFPS = 0;
 
 bool init();
 
@@ -41,7 +43,7 @@ int main(int argc, char* args[])
 	//Start up SDL and create window
 	if (!init())
 	{
-		printf("Failed to initialize!\n");
+		printf("Failed to initialize!!\n");
 	}
 	else
 	{
@@ -56,6 +58,7 @@ int main(int argc, char* args[])
 			bool quit = false;
 
 			SDL_Event e;
+			startclock = SDL_GetTicks();
 
 			while (!quit)
 			{
@@ -108,11 +111,12 @@ int main(int argc, char* args[])
 						break;
 					}
 				}
-				LAST = NOW;
-				NOW = SDL_GetPerformanceCounter();
 
-				deltaTime = (double) ((NOW - LAST) * 1000
-						/ SDL_GetPerformanceFrequency());
+				deltaclock = SDL_GetTicks() - startclock;
+				startclock = SDL_GetTicks();
+
+				if ( deltaclock != 0 )
+					currentFPS = 1000 / deltaclock;
 
 				render();
 

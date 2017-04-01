@@ -8,67 +8,103 @@ void Ball::load()
 	y = 480 / 2;
 	speed = 0.03f;
 	dir = -1;
+	ySpeed = 0.01f;
+	yDir = -1;
 }
 
-void Ball::render(SDL_Renderer* renderer,Paddle &lp,Paddle &rp)
+void Ball::reset()
 {
-	if(checkCollision(rect,lp.rect))
+	x = 640 / 2;
+	y = 480 / 2;
+	speed = 0.03f;
+	dir = -1;
+	ySpeed = 0.01f;
+	yDir = -1;
+}
+void Ball::render(SDL_Renderer* renderer, Paddle &lp, Paddle &rp)
+{
+	if (checkCollision(rect, lp.rect))
 	{
-		dir = 1;
+		dir = dir * -1;
+		yDir = yDir * -1;
+		ySpeed = ySpeed * (lp.rect.y / 55);
 	}
-	if(checkCollision(rect,rp.rect))
+	if (checkCollision(rect, rp.rect))
 	{
-		dir = -1;
+		dir = dir * -1;
+		yDir = yDir * -1;
+		ySpeed = ySpeed * (rp.rect.y / 55);
+	}
+	if (y > 0)
+	{
+		if (y > 480 - 25)
+		{
+			ySpeed = 0.01f;
+			yDir *= -1;
+		}
+	}
+	else
+	{
+		ySpeed = 0.01f;
+		yDir *= -1;
+	}
+	if(x < 0)
+	{
+		reset();
+	}
+	else if(x > 640 - 25)
+	{
+		reset();
 	}
 	x += speed * dir;
-
-	rect.y = (int)y;
-	rect.x = (int)x;
-    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
-    SDL_RenderFillRect( renderer, &rect);
+	y += ySpeed * yDir;
+	rect.y = (int) y;
+	rect.x = (int) x;
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(renderer, &rect);
 }
 
-bool Ball::checkCollision( SDL_Rect A, SDL_Rect B )
+bool Ball::checkCollision(SDL_Rect A, SDL_Rect B)
 {
-    //The sides of the rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
+	//The sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
 
-    //Calculate the sides of rect A
-    leftA = A.x;
-    rightA = A.x + A.w;
-    topA = A.y;
-    bottomA = A.y + A.h;
+	//Calculate the sides of rect A
+	leftA = A.x;
+	rightA = A.x + A.w;
+	topA = A.y;
+	bottomA = A.y + A.h;
 
-    //Calculate the sides of rect B
-    leftB = B.x;
-    rightB = B.x + B.w;
-    topB = B.y;
-    bottomB = B.y + B.h;
+	//Calculate the sides of rect B
+	leftB = B.x;
+	rightB = B.x + B.w;
+	topB = B.y;
+	bottomB = B.y + B.h;
 
-    //If any of the sides from A are outside of B
-    if( bottomA <= topB )
-    {
-        return false;
-    }
+	//If any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
 
-    if( topA >= bottomB )
-    {
-        return false;
-    }
+	if (topA >= bottomB)
+	{
+		return false;
+	}
 
-    if( rightA <= leftB )
-    {
-        return false;
-    }
+	if (rightA <= leftB)
+	{
+		return false;
+	}
 
-    if( leftA >= rightB )
-    {
-        return false;
-    }
+	if (leftA >= rightB)
+	{
+		return false;
+	}
 
-    //If none of the sides from A are outside B
-    return true;
+	//If none of the sides from A are outside B
+	return true;
 }

@@ -10,10 +10,13 @@ private:
 	float y;
 	float speed;
 	int dir;
+	float ySpeed;
+	int yDir;
 	bool checkCollision( SDL_Rect A, SDL_Rect B);
 public:
 	void load();
 	void render(SDL_Renderer* renderer,Paddle &lp,Paddle &rp);
+	void reset();
 	SDL_Rect rect;
 };
 
